@@ -1,0 +1,212 @@
+body {
+	font-family:"ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	line-height:12px;
+	font-size:10px;
+	color:#630;
+	background-color:#CCCCFF;
+}
+
+.names {
+	line-height:14px;
+	font-size:12px;
+	color:#630;
+	background-color:#CCCCFF;
+}
+
+.values {
+	line-height:16px;
+	font-size:14px;
+	color:#630;
+	background-color:#CCCCFF;
+}
+
+hr {
+	border-width: 1px 0px 0px 0px;
+	border-style: solid;
+	border-color: #cccccc;
+	height: 1px;
+}
+
+img {
+	max-width: 460px;
+}
+
+/* nametext */
+.nametext {
+	padding-bottom: 5px;
+	width: 150px;
+}
+.nametext  label {
+	display: block;
+	font-size: 12px;
+	padding-bottom: 5px;
+}
+.nametext input[type=text] {
+	border: 1px solid #1B73BA;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	color: #333;
+	font-size: 12px;
+	padding: 5px;
+	height: 30px;
+	width: 150px;
+}
+
+/* areatext */
+.areatext {
+	padding-bottom: 5px;
+	width: 460px;
+}
+.areatext label {
+	display: block;
+	font-size: 14px;
+	padding-bottom: 5px;
+}
+.areatext textarea {
+	border: 1px solid #1B73BA;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	color: #333;
+	font-size: 12px;
+	padding: 5px;
+	height: 210px;
+	width: 460px;
+}
+
+
+/* filebtn */
+.filebtn {border: 2px solid #1B73BA;} /* .filebtn {border: 2px inset #1B73BA;} */
+
+/* sendbtn */
+.sendbtn {
+	margin:5 0 5px;
+}
+.sendbtn input[type=submit] {
+	background: #CCCCFF;
+	background-position: 10px;
+	border: 2px solid #1B73BA;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	color: #1B73BA;
+	cursor: pointer;
+	font-size: 12px;
+	transition: 0.2s ease-in-out;
+	-o-transition: 0.2s ease-in-out;
+	-moz-transition: 0.2s ease-in-out;
+	-webkit-transition: 0.2s ease-in-out;
+	height: 30px;
+	width: 100px;
+}
+.sendbtn input[type=submit]:hover {
+	opacity: 0.6;
+}
+.sendbtn input[disabled=disabled] {
+	background: #B4B4B4;
+	background-position: 10px;
+	border: 2px solid #7E7E7E;
+	color: #7E7E7E;
+	cursor: default;
+}
+.sendbtn input[disabled=disabled]:hover {
+	opacity: 1;
+}
+
+/* footer */
+.pager .pagination {
+	text-align: center;
+}
+.pager .pagination li {
+	display: inline;
+	margin: 0 2px;
+	padding: 0;
+	display: inline-block;
+	background:#1B73BA;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	position: relative;
+	border-radius: 10px;
+	font-weight: bold;
+	text-shadow: -1px -1px rgba(255, 255, 255, 0.44), 1px 1px rgba(0, 0, 0, 0.38);
+}
+.pager .pagination li.prev,
+.pager .pagination li.next{
+	display: inline-block;
+	width: 60px;
+	height: 30px;
+	text-align: center;
+}
+.pager .pagination li a{
+	vertical-align: middle;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	display:table;
+	color: #CCCCFF;
+	text-decoration: none;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all  0.3s ease;
+}
+.pager .pagination li a span{
+	display:table-cell;
+	vertical-align:middle;
+}
+.pager .pagination li a:hover,
+.pager .pagination li a.active{
+	color: #1B73BA;
+	background: #CCCCFF;
+	border-color: #1B73BA;
+	border-radius: 10px;
+}
+.pager .pagination li.none{
+	pointer-events: none;
+	display: inline-block;
+	width: 58px;
+	height: 28px;
+	text-align: center;
+	background: #CCCCFF;
+	border: solid 1px #1B73BA;
+	border-radius: 10px;
+}
+.pager .pagination li.none a{
+	color: #1B73BA;
+}
+.pager .pagination li.nonum{
+	pointer-events: none;
+	display: inline-block;
+	width: 28px;
+	height: 28px;
+	text-align: center;
+	background: #CCCCFF;
+	border: solid 1px #1B73BA;
+	border-radius: 10px;
+}
+.pager .pagination li.nonum a{
+	color: #1B73BA;
+}
+
+@media only screen and (max-width: 767px){
+	.pager .pagination li{
+	display: none;
+	}
+	.pager .pagination li.prev,
+	.pager .pagination li.next{
+	display: inline-block;
+	width: 20%;
+	height: 50px;
+	text-align: center;
+	}
+	.pager .pagination li.prev a,
+	.pager .pagination li.next a{
+	width: 100%;
+	text-align: center;
+	}
+}
