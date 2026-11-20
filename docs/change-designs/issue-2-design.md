@@ -125,7 +125,8 @@ Issue の行番号参照は一部が現行 `338889f` と一致しない（Issue 
 3. **formidable の既定上限は 200 MB**: `incoming_form.js` L27 `maxFieldsSize = 20MB`、L28 `maxFileSize = 200MB`。本アプリは上書きしないため、**1 リクエストで 200 MB を一時ファイル化 → L206 で全量 Buffer → DB `bytea` へ恒久保存**という経路が成立する。
 4. **`id` は timestamp 主キー**: `createtable.sql` は `id timestamp default CURRENT_TIMESTAMP primary key`。`bbs.js` の並び順（L118 `order by id desc`）と削除条件（L219 `select min(id)`）は timestamp 順序に依存する。`CURRENT_TIMESTAMP` はトランザクション開始時刻なので、同一トランザクション内の複数 `INSERT` は理論上主キー衝突しうる。
 5. **共有可変状態**: `rowCount`（L19）がモジュール共有で、L95 の GET 時にだけ更新され、L102-103 / L160 / L218 で読まれる。並行リクエスト間の干渉でページ判定と**削除判定**が狂う。
-6. **OSV 照会結果**: `pg 7.12.1` / `formidable 1.2.1` はいずれも該当アドバイザリなし（`api.osv.dev/v1/query` の応答が `{}`）。ただし OSV の npm カバレッジは限定的で、**本環境に `node`/`npm` が無く `npm audit` は未実行**（`node: command not found`）。依存の要否判断は §11 の確認事項に回す。
+6. **依存の既知脆弱性**: OSV 照会では `pg 7.12.1` / `formidable 1.2.1` に該当アドバイザリなし（`api.osv.dev/v1/query` の応答が `{}`）。一方、GitHub Dependabot は既定ブランチで **high 1 件**を検出している（プッシュ時の remote 通知: `/security/dependabot/6`）。原因は追跡済みの `node_modules/semver`（**4.3.2**、`package-lock.json` 直下エントリ）で、**GHSA-c2qf-rxjj-qqgw（semver の正規表現サービス拒否。`new Range` に非信頼の range 文字列を渡した場合）**の範囲（7.x < 7.5.2 / 6.x < 6.3.1 / その他 < 5.7.2）に該当する。本アプリは `semver` を直接 require しておらず（`bbs.js` の依存は `formidable` / `http` / `pg` / `fs`）、**実行経路上的な影響は現時点で確認できていない**。開放中の PR #1 はこの `semver` と `pg` の更新をまとめたものと整合する。
+7. **未実行の検証**: **本環境に `node`/`npm` が無く `npm audit` は未実行**（`node: command not found`）ため、依存の脆弱性一覧は OSV と Dependabot 通知からの確認に留まる。依存の要否判断は §11 の確認事項に回す。
 
 ### 3.5 検証方法と限界
 
@@ -469,7 +470,7 @@ Issue #2 に記載がなく、**本設計で一方的に確定しない**項目�
 | 11 | curl 等による非ブラウザ POST の需要有無（`Origin` 検証が 403 を返す仕様の受容） | 検証実施（ブラウザ利用のみが前提） | 保守担当者 |
 | 12 | Issue #2 を 1 PR で対応するか、P0 / P1 / P2 で分割するか | **P0（§5.1）→ P1 → P2 の分割**を推奨 | 保守担当者 |
 | 13 | 既存 `node_modules` の git 追跡（164 ファイル）・`.gitignore` 不在の是正 | 本 Issue のスコープ外。別 Issue / PR を推奨 | 保守担当者 |
-| 14 | 依存更新との順序（開放中の [#1 Bump semver and pg](https://github.com/RyoKisoya/postgresql-bbs/pull/1) が `pg ^8.11.0`） | 実装 PR は #1 のマージ後にリベース（`pg` 7→8 で `Pool` API に破壊的変更はないが、テストの依存が二重変更になる） | 保守担当者 |
+| 14 | 依存更新との順序。開放中の [#1 Bump semver and pg](https://github.com/RyoKisoya/postgresql-bbs/pull/1) は `pg ^7.12.1` → `^8.11.0` と `semver` 引き上げをまとめる（Dependabot の high 1 件＝`semver 4.3.2` ReDoS に対応。§3.4-6） | 依存更新は Issue #2 のスコープ外とし、#1 に一任。実装 PR は #1 マージ後にリベース（`pg` 7→8 で `Pool` API の破壊的変更は確認されていないが、テスト環境の依存が二重変更になる） | 保守担当者 |
 
 ---
 
@@ -480,6 +481,7 @@ Issue #2 に記載がなく、**本設計で一方的に確定しない**項目�
 - `createtable.sql`（`id timestamp default CURRENT_TIMESTAMP primary key`, `filedata bytea`）
 - `package.json`（`formidable ^1.2.1` / `npm ^6.13.0` / `pg ^7.12.1`, `scripts.test` は `exit 1`）
 - `node_modules/formidable/lib/incoming_form.js` L27-30（既定上限・`uploadDir`）, L207-210（`type: part.mime`）, L342/371-372（`part.mime` の初期化と代入）
+- `package-lock.json`（`lockfileVersion: 1`）と `node_modules/semver/package.json`（4.3.2。GHSA-c2qf-rxjj-qqgw の対象範囲、§3.4-6）
 - Issue [#2](https://github.com/RyoKisoya/postgresql-bbs/issues/2)（本文のみ、コメントなし）
 
 
